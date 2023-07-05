@@ -1,10 +1,15 @@
+from publicshed_state import PublishedState
 from state import State
 from document import Document
+from moderation_state import ModerationState
 
 
 class DraftState(State):
 
-    def __init__(self, document: Document):
+    def __init__(self):
+        self.document: Document | None = None
+
+    def set_document(self, document: Document):
         self.document = document
 
     def render(self):
@@ -15,7 +20,13 @@ class DraftState(State):
 
     def publish(self):
         if self.document.author.role == 'admin':
-            pass
+            published_state = PublishedState()
+            self.document.change_state(published_state)
+            published_state.set_document(self.document)
+        else:
+            moderation_state = ModerationState()
+            self.document.change_state(moderation_state)
+            moderation_state.set_document(self.document)
 
     def approve(self):
         pass

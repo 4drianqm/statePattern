@@ -1,14 +1,15 @@
 from user import User
 from state import State
-from draft_state import DraftState
 
 
 class Document:
-    def __init__(self,  name: str, content: str, author: User):
+    def __init__(self,  name: str, content: str, author: User, state: State):
         self.name = name
         self.content = content
         self.author = author
-        self.state: State = DraftState(self)
+        # modify initial state
+        self.state: State = state
+        self.state.set_document(self)
 
     def render(self):
         self.state.render()
